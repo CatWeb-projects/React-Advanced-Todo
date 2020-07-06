@@ -1,0 +1,25 @@
+@import './ui//organism/TodosMain/TodosMain.scss';
+@import './ui/molecules/TodosList/TodoList.scss';
+
+body,html {
+  margin: 0;
+  padding: 0;
+  font-size: 20px;
+  font-family: cursive;
+}
+*,
+::after,
+::before {
+  box-sizing: border-box;
+}
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+a {
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: none;
+}
