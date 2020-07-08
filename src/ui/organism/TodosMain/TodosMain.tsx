@@ -1,5 +1,5 @@
-import React, { useState, useCallback, useEffect } from 'react';
-import { TodosList } from '../../molecules/TodosList/TodosList';
+import React from 'react';
+import { TodosList } from 'ui/molecules/TodosList/TodosList';
 
 export const TodosMain: any = () => {
   return (

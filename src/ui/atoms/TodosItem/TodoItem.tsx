@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react';
 
 interface ItemProps {
-  id: number;
+  id: any;
   title: string;
   description: string;
   isCompleted: boolean;
@@ -9,18 +9,16 @@ interface ItemProps {
 }
 
 export const TodoItem = (props: any) => {
-  const {
-    title,
-    id,
-    description,
-    isCompleted,
-    priorityLevel
-  } = props.todoProps;
+  const { title, description, isCompleted, priorityLevel } = props.todoProps;
 
   return (
-    <div className="each-item" key={id} onChange={props.onChange}>
+    <div className="each-item">
       <div className="each-item__checkbox-div">
-        <input type="checkbox" value={isCompleted} />
+        <input
+          type="checkbox"
+          checked={isCompleted}
+          onChange={props.markCompleteProp}
+        />
       </div>
       <div>
         <h3>{title}</h3>

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { TodoItem } from '../../atoms/TodosItem/TodoItem';
+import { v5 as uuidv5 } from 'uuid';
+import { TodoItem } from 'ui/atoms/TodosItem/TodoItem';
 
 interface Todos {
   id: number;
@@ -9,23 +10,28 @@ interface Todos {
   priorityLevel: string;
 }
 
-export const TodosList = (props: any) => {
+export const TodosList = () => {
   const [todos, setTodos] = useState<any>([]);
   const [title, setTitle] = useState<any>();
   const [descr, setDescr] = useState<any>();
   const [priority, setPriority] = useState<any>('Low');
 
-  const addTitle = useCallback((e: any) => {
+  // useEffect(() => {
+  //   setTodos(todos);
+  //   console.log(todos);
+  // }, [todos]);
+
+  const addTitle = (e: any) => {
     setTitle(e.target.value);
-  }, []);
+  };
 
-  const addDescr = useCallback((e: any) => {
+  const addDescr = (e: any) => {
     setDescr(e.target.value);
-  }, []);
+  };
 
-  const addPriority = useCallback((e: any) => {
+  const addPriority = (e: any) => {
     setPriority(e.target.value);
-  }, []);
+  };
 
   const addTodo = useCallback(
     (e: any) => {
@@ -33,6 +39,7 @@ export const TodosList = (props: any) => {
       setTodos([
         {
           id: todos.length ? todos[0].id + 1 : 1,
+          // id: uuidv5,
           title: title,
           description: descr,
           isCompleted: false,
@@ -40,29 +47,30 @@ export const TodosList = (props: any) => {
         },
         ...todos
       ]);
-      setTitle(title);
-      setDescr(descr);
-      setPriority(priority);
-      // if (priority === 'High' || (todos.length) == todos[0].id) {
-      //   console.log(todos.length)
-      //   console.log(todos[0].id)
-      // }
+      console.log(todos);
     },
     [title, descr, priority, todos]
   );
 
   const deleteTodo = useCallback(
     (todo) => (e: any) => {
-      setTodos(todos.filter((otherTodo: any) => otherTodo !== todo));
-      console.log(todos);
+      setTodos((prevTodos: any[]) =>
+        prevTodos.filter((otherTodo: any) => otherTodo !== todo)
+      );
     },
     [todos]
   );
 
-  useEffect(() => {
-    setTodos(todos);
-    console.log(todos);
-  }, [todos]);
+  const markComplete = useCallback(
+    (id) => (e: Todos) => {
+      setTodos((prevTodos: any[]) =>
+        prevTodos.map((todo: any) =>
+          todo.id === id ? (todos.todo = !todos.todo) : todos.todo
+        )
+      );
+    },
+    [todos]
+  );
 
   return (
     <div className="todos-wrapper">
@@ -85,8 +93,9 @@ export const TodosList = (props: any) => {
           todos.map((todo: Todos) => (
             <TodoItem
               todoProps={todo}
-              key={todo.id}
+              key={[todo.id, console.log(todo.id)]}
               deleteTodoProp={deleteTodo(todo)}
+              markCompleteProp={markComplete(todo.id)}
             />
           ))}
       </div>
