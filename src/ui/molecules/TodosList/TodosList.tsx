@@ -11,15 +11,10 @@ interface Todos {
 }
 
 export const TodosList = () => {
-  const [todos, setTodos] = useState<any>([]);
+  const [todos, setTodos] = useState<any>();
   const [title, setTitle] = useState<any>();
   const [descr, setDescr] = useState<any>();
   const [priority, setPriority] = useState<any>('Low');
-
-  // useEffect(() => {
-  //   setTodos(todos);
-  //   console.log(todos);
-  // }, [todos]);
 
   const addTitle = (e: any) => {
     setTitle(e.target.value);
@@ -33,23 +28,50 @@ export const TodosList = () => {
     setPriority(e.target.value);
   };
 
-  const addTodo = useCallback(
+  const SubmitTodo = useCallback(
     (e: any) => {
       e.preventDefault();
       setTodos([
+        ...todos,
         {
-          id: todos.length ? todos[0].id + 1 : 1,
-          // id: uuidv5,
+          id: todos.length ? todos[todos.length - 1].id + 1 : 1,
+          // id: todos.length + 1,
           title: title,
           description: descr,
           isCompleted: false,
           priorityLevel: priority
-        },
-        ...todos
+        }
       ]);
-      console.log(todos);
     },
     [title, descr, priority, todos]
+  );
+
+  useEffect(() => {
+    setTodos(todos);
+    console.log(todos);
+  }, [todos]);
+
+  useEffect(() => {
+    const data = localStorage.getItem('list');
+    if (data) {
+      setTodos(JSON.parse(data));
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('list', JSON.stringify(todos));
+  });
+
+  const markComplete = useCallback(
+    (todo: any, index) => (event: any) => {
+      const newTodos = [...todos];
+      newTodos.splice(index, 1, {
+        ...todo,
+        isCompleted: !todo.isCompleted
+      });
+      setTodos(newTodos);
+    },
+    [todos]
   );
 
   const deleteTodo = useCallback(
@@ -61,21 +83,10 @@ export const TodosList = () => {
     [todos]
   );
 
-  const markComplete = useCallback(
-    (id) => (e: Todos) => {
-      setTodos((prevTodos: any[]) =>
-        prevTodos.map((todo: any) =>
-          todo.id === id ? (todos.todo = !todos.todo) : todos.todo
-        )
-      );
-    },
-    [todos]
-  );
-
   return (
     <div className="todos-wrapper">
       <div className="todos-wrapper__form">
-        <form onSubmit={addTodo}>
+        <form onSubmit={SubmitTodo}>
           <input onChange={addTitle} type="text" placeholder="Title" />
           <br />
           <input onChange={addDescr} type="text" placeholder="Description" />
@@ -90,12 +101,12 @@ export const TodosList = () => {
       </div>
       <div className="todos-wrapper__mapping">
         {todos &&
-          todos.map((todo: Todos) => (
+          todos.map((todo: Todos, index: number) => (
             <TodoItem
               todoProps={todo}
-              key={[todo.id, console.log(todo.id)]}
+              key={todo.id}
               deleteTodoProp={deleteTodo(todo)}
-              markCompleteProp={markComplete(todo.id)}
+              markCompleteProp={markComplete(todo, index)}
             />
           ))}
       </div>
