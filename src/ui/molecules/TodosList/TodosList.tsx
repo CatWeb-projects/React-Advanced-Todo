@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { v5 as uuidv5 } from 'uuid';
 import { TodoItem } from 'ui/atoms/TodosItem/TodoItem';
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
+import { v4 as uuid } from 'uuid';
 
 interface Todos {
   id: number;
@@ -11,10 +13,16 @@ interface Todos {
 }
 
 export const TodosList = () => {
-  const [todos, setTodos] = useState<any>();
+  const [todos, setTodos] = useState<any>([]);
   const [title, setTitle] = useState<any>();
   const [descr, setDescr] = useState<any>();
-  const [priority, setPriority] = useState<any>('Low');
+  const [priority, setPriority] = useState<any>('low');
+  const [time, setTime] = useState<any>();
+
+  dayjs.extend(relativeTime);
+  const newDate = new Date();
+  // setTime(newDate)
+  const fromNow = dayjs(newDate).fromNow();
 
   const addTitle = (e: any) => {
     setTitle(e.target.value);
@@ -27,43 +35,26 @@ export const TodosList = () => {
   const addPriority = (e: any) => {
     setPriority(e.target.value);
   };
-
   const SubmitTodo = useCallback(
     (e: any) => {
       e.preventDefault();
       setTodos([
         ...todos,
         {
-          id: todos.length ? todos[todos.length - 1].id + 1 : 1,
-          // id: todos.length + 1,
+          id: uuid(),
           title: title,
           description: descr,
           isCompleted: false,
-          priorityLevel: priority
+          priorityLevel: priority,
+          updatedAt: fromNow
         }
       ]);
     },
-    [title, descr, priority, todos]
+    [newDate, title, descr, priority, todos]
   );
 
-  useEffect(() => {
-    setTodos(todos);
-    console.log(todos);
-  }, [todos]);
-
-  useEffect(() => {
-    const data = localStorage.getItem('list');
-    if (data) {
-      setTodos(JSON.parse(data));
-    }
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem('list', JSON.stringify(todos));
-  });
-
   const markComplete = useCallback(
-    (todo: any, index) => (event: any) => {
+    (todo: any, index: number) => (event: any) => {
       const newTodos = [...todos];
       newTodos.splice(index, 1, {
         ...todo,
@@ -83,6 +74,31 @@ export const TodosList = () => {
     [todos]
   );
 
+  const priorities: any = {
+    low: 1,
+    medium: 2,
+    high: 3
+  };
+  const sortedTodos = todos.sort((a: any, b: any) => {
+    return priorities[b.priorityLevel] - priorities[a.priorityLevel];
+  });
+
+  useEffect(() => {
+    setTodos(sortedTodos);
+    console.log(sortedTodos);
+  }, [sortedTodos]);
+
+  useEffect(() => {
+    const data = localStorage.getItem('list');
+    if (data) {
+      setTodos(JSON.parse(data));
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('list', JSON.stringify(sortedTodos));
+  });
+
   return (
     <div className="todos-wrapper">
       <div className="todos-wrapper__form">
@@ -92,9 +108,9 @@ export const TodosList = () => {
           <input onChange={addDescr} type="text" placeholder="Description" />
           <br />
           <select onChange={addPriority}>
-            <option value="Low">Low</option>
-            <option value="Medium">Medium</option>
-            <option value="High">High</option>
+            <option value="low">low</option>
+            <option value="medium">medium</option>
+            <option value="high">high</option>
           </select>
           <button>Add</button>
         </form>
@@ -107,6 +123,7 @@ export const TodosList = () => {
               key={todo.id}
               deleteTodoProp={deleteTodo(todo)}
               markCompleteProp={markComplete(todo, index)}
+              newDateProp={fromNow}
             />
           ))}
       </div>

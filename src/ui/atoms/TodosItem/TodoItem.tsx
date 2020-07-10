@@ -11,8 +11,16 @@ interface ItemProps {
 export const TodoItem = (props: any) => {
   const { title, description, isCompleted, priorityLevel } = props.todoProps;
 
+  const checkStyle = {
+    textDecoration: 'line-through',
+    color: '#ccc'
+  };
+  const checkDiv = {
+    background: 'linear-gradient(to bottom, #27ff00, #3b9a29)'
+  };
+
   return (
-    <div className="each-item">
+    <div style={isCompleted ? checkDiv : undefined} className="each-item">
       <div className="each-item__checkbox-div">
         <input
           type="checkbox"
@@ -21,14 +29,21 @@ export const TodoItem = (props: any) => {
         />
       </div>
       <div>
-        <h3>{title}</h3>
+        <h3 style={isCompleted ? checkStyle : undefined}>{title}</h3>
       </div>
       <div>
-        <span>{description}</span>
+        <span style={isCompleted ? checkStyle : undefined}>{description}</span>
+      </div>
+      <div className="each-item__updated">
+        <span style={isCompleted ? checkStyle : undefined}>
+          {props.newDateProp}
+        </span>
       </div>
       <div className="each-item__button-div">
         <form onSubmit={props.deleteTodoProp}>
-          <span>Priority: {priorityLevel}</span>
+          <span style={isCompleted ? checkStyle : undefined}>
+            Priority: {priorityLevel}
+          </span>
           <button>Delete</button>
         </form>
       </div>
