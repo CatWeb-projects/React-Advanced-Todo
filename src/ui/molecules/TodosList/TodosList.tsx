@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { TodoItem } from 'ui/atoms/TodosItem/TodoItem';
 import dayjs from 'dayjs';
-import relativeTime from 'dayjs/plugin/relativeTime';
 import { v4 as uuid } from 'uuid';
 
 interface Todos {
+  [x: string]: any;
   id: number;
   title: string;
   description: string;
@@ -17,12 +17,12 @@ export const TodosList = () => {
   const [title, setTitle] = useState<any>();
   const [descr, setDescr] = useState<any>();
   const [priority, setPriority] = useState<any>('low');
-  const [time, setTime] = useState<any>();
 
-  dayjs.extend(relativeTime);
-  const newDate = new Date();
-  // setTime(newDate)
-  const fromNow = dayjs(newDate).fromNow();
+  const addTime = () => {
+    const newDate = new Date();
+    const fromNow = dayjs(newDate).format('MMM D, YYYY h:mm:ss A');
+    return fromNow;
+  };
 
   const addTitle = (e: any) => {
     setTitle(e.target.value);
@@ -46,11 +46,11 @@ export const TodosList = () => {
           description: descr,
           isCompleted: false,
           priorityLevel: priority,
-          updatedAt: fromNow
+          updatedAt: addTime()
         }
       ]);
     },
-    [newDate, title, descr, priority, todos]
+    [addTime(), title, descr, priority, todos]
   );
 
   const markComplete = useCallback(
@@ -104,9 +104,7 @@ export const TodosList = () => {
       <div className="todos-wrapper__form">
         <form onSubmit={SubmitTodo}>
           <input onChange={addTitle} type="text" placeholder="Title" />
-          <br />
           <input onChange={addDescr} type="text" placeholder="Description" />
-          <br />
           <select onChange={addPriority}>
             <option value="low">low</option>
             <option value="medium">medium</option>
@@ -123,7 +121,7 @@ export const TodosList = () => {
               key={todo.id}
               deleteTodoProp={deleteTodo(todo)}
               markCompleteProp={markComplete(todo, index)}
-              newDateProp={fromNow}
+              newDateProp={todo.updatedAt}
             />
           ))}
       </div>

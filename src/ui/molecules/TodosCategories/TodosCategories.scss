@@ -1,0 +1,80 @@
+.categories-div {
+  width: 100%;
+  display: flex;
+  min-height: 50px;
+  &__each-category {
+    display: flex;
+    flex-direction: column;
+    background: #edaa17;
+    border: 2px solid #6e6c6c;
+    border-radius: 5px;
+    max-width: 25%;
+  }
+  &__holder {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    min-height: 50px;
+    padding: 0 5px;
+  }
+  &__adding {
+    align-self: flex-start;
+  }
+  &__input form {
+    display: flex;
+    > input {
+      width: 90%;
+      height: 50px;
+      background: #edaa17;
+      outline: none;
+      border: none;
+      font-size: 25px;
+      color: #fff;
+      border: 2px solid #6e6c6c;
+      border-radius: 5px;
+    }
+    > input::placeholder {
+      color: #fff;
+    }
+    > button {
+      width: 10%;
+      height: 50px;
+      align-self: center;
+      background: #edaa17;
+      border: 2px solid #6e6c6c;
+      border-radius: 5px;
+      outline: none;
+      cursor: pointer;
+      font-size: 20px;
+      color: #fff;
+    }
+  }
+  &__check {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    input {
+      -webkit-appearance: none;
+      padding: 12px;
+      border: 2px solid #6e6c6c;
+      border-radius: 50%;
+      cursor: pointer;
+      outline: none;
+      background-color: #edaa17;
+    }
+    input:checked {
+      background-color: #6e6c6c;
+    }
+    button {
+      background-color: brown;
+      border: none;
+      outline: none;
+      border-radius: 5px;
+      width: 80px;
+      cursor: pointer;
+    }
+  }
+  &__add-category {
+    align-self: flex-end;
+  }
+}
