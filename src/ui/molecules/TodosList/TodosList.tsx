@@ -12,12 +12,12 @@ interface Todos {
   updatedAt: any;
 }
 
-export const TodosList = (props:any) => {
+export const TodosList = (props: any) => {
   const [todos, setTodos] = useState<any>([]);
   const [title, setTitle] = useState<any>();
   const [descr, setDescr] = useState<any>();
   const [priority, setPriority] = useState<any>('low');
-  const [categoryName, setCategorieName] = useState<any>('');
+  const [categoryName, setCategoryName] = useState('');
 
   const addTime = () => {
     const newDate = new Date();
@@ -37,6 +37,11 @@ export const TodosList = (props:any) => {
     setPriority(e.target.value);
   };
 
+  const addCategory = (e: any) => {
+    if ((props.categoriesProp = e.target.value))
+      return setCategoryName(e.target.value);
+  };
+
   const SubmitTodo = useCallback(
     (e: any) => {
       e.preventDefault();
@@ -48,12 +53,12 @@ export const TodosList = (props:any) => {
           description: descr,
           isCompleted: false,
           priorityLevel: priority,
-          categoryName: props.categoriesProp,
-          updatedAt: addTime(),
+          categoryName: addCategory,
+          updatedAt: addTime()
         }
       ]);
     },
-    [props.categoriesProp, addTime(), title, descr, priority, todos]
+    [addCategory, addTime(), title, descr, priority, todos]
   );
 
   const markComplete = useCallback(
@@ -108,10 +113,14 @@ export const TodosList = (props:any) => {
         <form onSubmit={SubmitTodo}>
           <input onChange={addTitle} type="text" placeholder="Title" />
           <input onChange={addDescr} type="text" placeholder="Description" />
-          <select onChange={props.categoryNameProp}>
-            {props.categoriesProp & props.categoriesProp.map((name:any) => (
-              <option key={name.id} value={name.id}>{name.categoryName}</option>
-            ))}
+          <select onSubmit={addCategory}>
+            <option>Select Value</option>
+            {props.categoriesProp &&
+              props.categoriesProp.map((item: any) => (
+                <option key={item.id} value={item.name}>
+                  {item.name}
+                </option>
+              ))}
           </select>
           <select onChange={addPriority}>
             <option value="low">low</option>

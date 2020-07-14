@@ -13,10 +13,13 @@ export const CategoriesItem = (props: any) => {
             <button>Delete</button>
           </form>
         </div>
-        <input type="checkbox" checked={isCompleted} onChange={props.markCompleteProp} />
+        <input
+          type="checkbox"
+          checked={isCompleted}
+          onChange={props.markCompleteProp}
+        />
       </div>
       <span>{props.newDateProp}</span>
     </div>
-    
   );
 };

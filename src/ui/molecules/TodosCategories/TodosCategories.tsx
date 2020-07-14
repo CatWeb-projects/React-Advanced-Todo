@@ -28,7 +28,7 @@ export const TodosCategories = () => {
           id: uuid(),
           name: categoryName,
           isCompleted: false,
-          updatedAt: addTime(),
+          updatedAt: addTime()
         }
       ]);
     },
@@ -59,15 +59,16 @@ export const TodosCategories = () => {
   );
 
   useEffect(() => {
-    setTodos([])
-    const filtered = (props:any) => {
-      todos.filter((todo:any) => {
-        [...todo]; todos: todo.includes(props.categoryName)
-      })
-    }
-    setTodos(todos)
+    setTodos([]);
+    const filtered = (props: any) => {
+      todos.filter((todo: any) => {
+        [...todo];
+        todos: todo.includes(props.categoryName);
+      });
+    };
+    setTodos(todos);
     console.log(todos);
-  }, [todos])
+  }, [todos]);
 
   useEffect(() => {
     setCategories(categories);
@@ -97,7 +98,7 @@ export const TodosCategories = () => {
               markCompleteProp={markComplete(category, index)}
               newDateProp={category.updatedAt}
             />
-        ))}
+          ))}
       </div>
       <div className="categories-div__adding">
         <div className="categories-div__input">
@@ -110,8 +111,10 @@ export const TodosCategories = () => {
             <button>Add</button>
           </form>
         </div>
-        <TodosList categoryNameProp={SubmitCategorie}
-        categoriesProp={categories}/>
+        <TodosList
+          categorySubmitProp={SubmitCategorie}
+          categoriesProp={categories}
+        />
       </div>
     </div>
   );

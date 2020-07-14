@@ -53,19 +53,17 @@
     "lint-staged": "^10.2.11",
     "prettier": "^2.0.5"
   },
-  "lint-staged": {
-    "src/**/*.{js,jsx}": [
-      "npx eslint . --fix",
-      "git add"
-    ],
-    "src/**/*.{js,jsx,scss}": [
-      "npx prettier --write -c .prettierrc",
-      "git add"
-    ]
-  },
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged"
     }
+  },
+  "lint-staged": {
+    "src/**/*.{js,jsx}": [
+      "eslint -c .eslintrc --fix --color"
+    ],
+    "src/**/*.{js,jsx,scss}": [
+      "npx prettier --write -c .prettierrc"
+    ]
   }
 }
