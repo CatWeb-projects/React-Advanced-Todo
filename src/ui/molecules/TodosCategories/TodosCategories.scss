@@ -8,16 +8,21 @@
     background: #edaa17;
     border: 2px solid #6e6c6c;
     border-radius: 5px;
-    max-width: 25%;
+    width: 20%;
   }
   &__holder {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     flex-direction: column;
     min-height: 50px;
     padding: 0 5px;
+    border: 2px solid #a71c1c;
+    > span {
+      font-size: 12px !important;
+    }
   }
   &__adding {
+    width: 80%;
     align-self: flex-start;
   }
   &__input form {
@@ -71,6 +76,7 @@
       outline: none;
       border-radius: 5px;
       width: 80px;
+      min-height: 25px;
       cursor: pointer;
     }
   }

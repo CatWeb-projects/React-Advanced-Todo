@@ -2,14 +2,21 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { CategoriesItem } from 'ui/atoms/CategoriesItem/CategoriesItem';
 import { TodosList } from '../TodosList/TodosList';
 import { v4 as uuid } from 'uuid';
+import dayjs from 'dayjs';
 
 export const TodosCategories = () => {
   const [categories, setCategories] = useState<any>([]);
-  const [categorieName, setCategorieName] = useState<any>();
+  const [categoryName, setCategoryName] = useState<any>();
+  const [todos, setTodos] = useState<any>([]);
+
+  const addTime = () => {
+    const newDate = new Date();
+    const fromNow = dayjs(newDate).format('MMM D, YYYY h:mm:ss A');
+    return fromNow;
+  };
 
   const addName = (e: any) => {
-    setCategorieName(e.target.value);
-    console.log(categorieName);
+    setCategoryName(e.target.value);
   };
 
   const SubmitCategorie = useCallback(
@@ -19,14 +26,16 @@ export const TodosCategories = () => {
         ...categories,
         {
           id: uuid(),
-          name: categorieName
+          name: categoryName,
+          isCompleted: false,
+          updatedAt: addTime(),
         }
       ]);
     },
-    [categorieName, categories]
+    [addTime(), categoryName, categories]
   );
 
-  const deleteCategorie = useCallback(
+  const deleteCategory = useCallback(
     (categorie) => (e: any) => {
       setCategories((prevCategories: any[]) =>
         prevCategories.filter(
@@ -37,17 +46,28 @@ export const TodosCategories = () => {
     [categories]
   );
 
-  // const markComplete = useCallback(
-  //   (categorie: any, index: number) => (event: any) => {
-  //     const newCategories = [...categories];
-  //     newCategories.splice(index, 1, {
-  //       ...categorie,
-  //       isCompleted: !todo.isCompleted
-  //     });
-  //     setCategories(newCategories);
-  //   },
-  //   [categories]
-  // );
+  const markComplete = useCallback(
+    (category: any, index: number) => (event: any) => {
+      const newCategories = [...categories];
+      newCategories.splice(index, 1, {
+        ...category,
+        isCompleted: !category.isCompleted
+      });
+      setCategories(newCategories);
+    },
+    [categories]
+  );
+
+  useEffect(() => {
+    setTodos([])
+    const filtered = (props:any) => {
+      todos.filter((todo:any) => {
+        [...todo]; todos: todo.includes(props.categoryName)
+      })
+    }
+    setTodos(todos)
+    console.log(todos);
+  }, [todos])
 
   useEffect(() => {
     setCategories(categories);
@@ -69,14 +89,15 @@ export const TodosCategories = () => {
     <div className="categories-div">
       <div className="categories-div__each-category">
         {categories &&
-          categories.map((categorie: any, index: number) => (
+          categories.map((category: any, index: number) => (
             <CategoriesItem
-              categorieProps={categorie}
-              key={categorie.id}
-              deleteCategorieProp={deleteCategorie(categorie)}
-              // markCompleteProp={markComplete}
+              categorieProps={category}
+              key={category.id}
+              deleteCategoryProp={deleteCategory(category)}
+              markCompleteProp={markComplete(category, index)}
+              newDateProp={category.updatedAt}
             />
-          ))}
+        ))}
       </div>
       <div className="categories-div__adding">
         <div className="categories-div__input">
@@ -89,7 +110,8 @@ export const TodosCategories = () => {
             <button>Add</button>
           </form>
         </div>
-        <TodosList />
+        <TodosList categoryNameProp={SubmitCategorie}
+        categoriesProp={categories}/>
       </div>
     </div>
   );

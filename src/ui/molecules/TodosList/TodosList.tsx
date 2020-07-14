@@ -4,19 +4,20 @@ import dayjs from 'dayjs';
 import { v4 as uuid } from 'uuid';
 
 interface Todos {
-  [x: string]: any;
   id: number;
   title: string;
   description: string;
   isCompleted: boolean;
   priorityLevel: string;
+  updatedAt: any;
 }
 
-export const TodosList = () => {
+export const TodosList = (props:any) => {
   const [todos, setTodos] = useState<any>([]);
   const [title, setTitle] = useState<any>();
   const [descr, setDescr] = useState<any>();
   const [priority, setPriority] = useState<any>('low');
+  const [categoryName, setCategorieName] = useState<any>('');
 
   const addTime = () => {
     const newDate = new Date();
@@ -35,6 +36,7 @@ export const TodosList = () => {
   const addPriority = (e: any) => {
     setPriority(e.target.value);
   };
+
   const SubmitTodo = useCallback(
     (e: any) => {
       e.preventDefault();
@@ -46,11 +48,12 @@ export const TodosList = () => {
           description: descr,
           isCompleted: false,
           priorityLevel: priority,
-          updatedAt: addTime()
+          categoryName: props.categoriesProp,
+          updatedAt: addTime(),
         }
       ]);
     },
-    [addTime(), title, descr, priority, todos]
+    [props.categoriesProp, addTime(), title, descr, priority, todos]
   );
 
   const markComplete = useCallback(
@@ -105,6 +108,11 @@ export const TodosList = () => {
         <form onSubmit={SubmitTodo}>
           <input onChange={addTitle} type="text" placeholder="Title" />
           <input onChange={addDescr} type="text" placeholder="Description" />
+          <select onChange={props.categoryNameProp}>
+            {props.categoriesProp & props.categoriesProp.map((name:any) => (
+              <option key={name.id} value={name.id}>{name.categoryName}</option>
+            ))}
+          </select>
           <select onChange={addPriority}>
             <option value="low">low</option>
             <option value="medium">medium</option>

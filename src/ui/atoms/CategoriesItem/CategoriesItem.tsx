@@ -1,7 +1,7 @@
 import React from 'react';
 
 export const CategoriesItem = (props: any) => {
-  const { name } = props.categorieProps;
+  const { name, isCompleted } = props.categorieProps;
   return (
     <div className="categories-div__holder">
       <div className="categories-div__text">
@@ -9,12 +9,14 @@ export const CategoriesItem = (props: any) => {
       </div>
       <div className="categories-div__check">
         <div>
-          <form onSubmit={props.deleteCategorieProp}>
+          <form onSubmit={props.deleteCategoryProp}>
             <button>Delete</button>
           </form>
         </div>
-        <input type="checkbox" onChange={props.markCompleteProp} />
+        <input type="checkbox" checked={isCompleted} onChange={props.markCompleteProp} />
       </div>
+      <span>{props.newDateProp}</span>
     </div>
+    
   );
 };
