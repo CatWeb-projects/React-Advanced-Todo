@@ -34,7 +34,7 @@
     grid-template-columns: repeat(3, 1fr);
     grid-gap: 10px;
     grid-auto-rows: 1fr;
-    padding: 10px 0 10px 10px;
+    padding-top: 10px;
   }
 }
 .each-item {
@@ -69,6 +69,8 @@
       border-radius: 5px;
       width: 80px;
       cursor: pointer;
+      height: 30px;
+      align-self: flex-end;
     }
   }
   input {

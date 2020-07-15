@@ -46,6 +46,13 @@ export const TodosCategories = () => {
     [categories]
   );
 
+  // const filtered = todos.filter((item:any) =>
+  // (item.categoryName.
+  //   includes(categories.map((filter:any) =>
+  //   filter.name == item.categoryName ? item : false
+  //   ))
+  // ))
+
   const markComplete = useCallback(
     (category: any, index: number) => (event: any) => {
       const newCategories = [...categories];
@@ -57,18 +64,6 @@ export const TodosCategories = () => {
     },
     [categories]
   );
-
-  useEffect(() => {
-    setTodos([]);
-    const filtered = (props: any) => {
-      todos.filter((todo: any) => {
-        [...todo];
-        todos: todo.includes(props.categoryName);
-      });
-    };
-    setTodos(todos);
-    console.log(todos);
-  }, [todos]);
 
   useEffect(() => {
     setCategories(categories);
@@ -111,10 +106,7 @@ export const TodosCategories = () => {
             <button>Add</button>
           </form>
         </div>
-        <TodosList
-          categorySubmitProp={SubmitCategorie}
-          categoriesProp={categories}
-        />
+        <TodosList categoriesProp={categories} />
       </div>
     </div>
   );

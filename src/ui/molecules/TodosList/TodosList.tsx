@@ -38,8 +38,7 @@ export const TodosList = (props: any) => {
   };
 
   const addCategory = (e: any) => {
-    if ((props.categoriesProp = e.target.value))
-      return setCategoryName(e.target.value);
+    setCategoryName(e.target.value);
   };
 
   const SubmitTodo = useCallback(
@@ -53,12 +52,12 @@ export const TodosList = (props: any) => {
           description: descr,
           isCompleted: false,
           priorityLevel: priority,
-          categoryName: addCategory,
+          categoryName: categoryName,
           updatedAt: addTime()
         }
       ]);
     },
-    [addCategory, addTime(), title, descr, priority, todos]
+    [categoryName, addTime(), title, descr, priority, todos]
   );
 
   const markComplete = useCallback(
@@ -91,6 +90,13 @@ export const TodosList = (props: any) => {
     return priorities[b.priorityLevel] - priorities[a.priorityLevel];
   });
 
+  const filtered = todos.filter((item: any) =>
+    item.categoryName.includes(
+      props.categoriesProp.map((filter: any) =>
+        filter.name === item.categoryName ? item : false
+      )
+    )
+  );
   useEffect(() => {
     setTodos(sortedTodos);
     console.log(sortedTodos);
@@ -113,7 +119,7 @@ export const TodosList = (props: any) => {
         <form onSubmit={SubmitTodo}>
           <input onChange={addTitle} type="text" placeholder="Title" />
           <input onChange={addDescr} type="text" placeholder="Description" />
-          <select onSubmit={addCategory}>
+          <select onChange={addCategory}>
             <option>Select Value</option>
             {props.categoriesProp &&
               props.categoriesProp.map((item: any) => (
