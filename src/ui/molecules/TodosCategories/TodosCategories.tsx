@@ -1,22 +1,19 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useContext } from 'react';
 import { CategoriesItem } from 'ui/atoms/CategoriesItem/CategoriesItem';
 import { TodosList } from '../TodosList/TodosList';
 import { v4 as uuid } from 'uuid';
 import dayjs from 'dayjs';
+import { Context } from 'Context/Context';
 
 export const TodosCategories = () => {
   const [categories, setCategories] = useState<any>([]);
-  const [categoryName, setCategoryName] = useState<any>();
-  const [todos, setTodos] = useState<any>([]);
+  const [categoryName, setCategoryName] = useState<any>('');
+  const [todos, setTodos] = useContext<any>(Context);
 
   const addTime = () => {
     const newDate = new Date();
     const fromNow = dayjs(newDate).format('MMM D, YYYY h:mm:ss A');
     return fromNow;
-  };
-
-  const addName = (e: any) => {
-    setCategoryName(e.target.value);
   };
 
   const SubmitCategorie = useCallback(
@@ -31,8 +28,9 @@ export const TodosCategories = () => {
           updatedAt: addTime()
         }
       ]);
+      setCategoryName('');
     },
-    [addTime(), categoryName, categories]
+    [categoryName, addTime(), categories]
   );
 
   const deleteCategory = useCallback(
@@ -46,13 +44,6 @@ export const TodosCategories = () => {
     [categories]
   );
 
-  // const filtered = todos.filter((item:any) =>
-  // (item.categoryName.
-  //   includes(categories.map((filter:any) =>
-  //   filter.name == item.categoryName ? item : false
-  //   ))
-  // ))
-
   const markComplete = useCallback(
     (category: any, index: number) => (event: any) => {
       const newCategories = [...categories];
@@ -60,10 +51,20 @@ export const TodosCategories = () => {
         ...category,
         isCompleted: !category.isCompleted
       });
+
       setCategories(newCategories);
     },
     [categories]
   );
+
+  // const filtered = todos.filter((todo:any) =>
+  // (
+  // todo.name.
+  //   includes(categories.map((filter:any) =>
+  //   filter.name == todo.name ? ([todo, console.log(todo)]) : false
+  //   ))
+  // ))
+  // setTodos(filtered)
 
   useEffect(() => {
     setCategories(categories);
@@ -92,6 +93,7 @@ export const TodosCategories = () => {
               deleteCategoryProp={deleteCategory(category)}
               markCompleteProp={markComplete(category, index)}
               newDateProp={category.updatedAt}
+              // onClick={}
             />
           ))}
       </div>
@@ -99,9 +101,10 @@ export const TodosCategories = () => {
         <div className="categories-div__input">
           <form onSubmit={SubmitCategorie}>
             <input
+              value={categoryName}
+              onChange={(event) => setCategoryName(event.target.value)}
               type="text"
-              placeholder="Selected category name here"
-              onChange={addName}
+              placeholder="Category name here"
             />
             <button>Add</button>
           </form>

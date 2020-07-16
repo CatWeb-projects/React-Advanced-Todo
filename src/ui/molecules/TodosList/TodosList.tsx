@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useContext } from 'react';
 import { TodoItem } from 'ui/atoms/TodosItem/TodoItem';
 import dayjs from 'dayjs';
 import { v4 as uuid } from 'uuid';
+import { Context } from 'Context/Context';
 
 interface Todos {
   id: number;
@@ -13,9 +14,9 @@ interface Todos {
 }
 
 export const TodosList = (props: any) => {
-  const [todos, setTodos] = useState<any>([]);
-  const [title, setTitle] = useState<any>();
-  const [descr, setDescr] = useState<any>();
+  const [todos, setTodos, categories, setCategories] = useContext<any>(Context);
+  const [title, setTitle] = useState<any>('');
+  const [descr, setDescr] = useState<any>('');
   const [priority, setPriority] = useState<any>('low');
   const [categoryName, setCategoryName] = useState('');
 
@@ -25,19 +26,7 @@ export const TodosList = (props: any) => {
     return fromNow;
   };
 
-  const addTitle = (e: any) => {
-    setTitle(e.target.value);
-  };
-
-  const addDescr = (e: any) => {
-    setDescr(e.target.value);
-  };
-
-  const addPriority = (e: any) => {
-    setPriority(e.target.value);
-  };
-
-  const addCategory = (e: any) => {
+  const addCategoryName = (e: any) => {
     setCategoryName(e.target.value);
   };
 
@@ -52,12 +41,14 @@ export const TodosList = (props: any) => {
           description: descr,
           isCompleted: false,
           priorityLevel: priority,
-          categoryName: categoryName,
+          name: categoryName,
           updatedAt: addTime()
         }
       ]);
+      setTitle('');
+      setDescr('');
     },
-    [categoryName, addTime(), title, descr, priority, todos]
+    [title, descr, categoryName, priority, addTime(), todos]
   );
 
   const markComplete = useCallback(
@@ -90,16 +81,29 @@ export const TodosList = (props: any) => {
     return priorities[b.priorityLevel] - priorities[a.priorityLevel];
   });
 
-  const filtered = todos.filter((item: any) =>
-    item.categoryName.includes(
-      props.categoriesProp.map((filter: any) =>
-        filter.name === item.categoryName ? item : false
-      )
-    )
-  );
+  // useEffect(() => {
+  //   const filtered = todos.filter((item: any) =>
+  //   (item.name.includes(
+  //     props.categoriesProp.map((filter: any) =>
+  //       filter.name === item.name ? ([item, console.log(item)]) : false
+  //     )
+  //   )
+  // ));
+  // setCategories(filtered)
+  // }, [categories, console.log(categories)])
+
+  // const filtered = todos.filter((todo:any) =>
+  // (
+  // todo.name.
+  //   includes(categories.map((filter:any) =>
+  //   filter.name == todo.name ? ([todo, console.log(todo)]) : false
+  //   ))
+  // ))
+  // setTodos(filtered),
+
   useEffect(() => {
     setTodos(sortedTodos);
-    console.log(sortedTodos);
+    // console.log(sortedTodos);
   }, [sortedTodos]);
 
   useEffect(() => {
@@ -117,9 +121,19 @@ export const TodosList = (props: any) => {
     <div className="todos-wrapper">
       <div className="todos-wrapper__form">
         <form onSubmit={SubmitTodo}>
-          <input onChange={addTitle} type="text" placeholder="Title" />
-          <input onChange={addDescr} type="text" placeholder="Description" />
-          <select onChange={addCategory}>
+          <input
+            value={title}
+            onChange={(event) => setTitle(event.target.value)}
+            type="text"
+            placeholder="Todo Title"
+          />
+          <input
+            value={descr}
+            onChange={(event) => setDescr(event.target.value)}
+            type="text"
+            placeholder="Todo Description"
+          />
+          <select onChange={addCategoryName}>
             <option>Select Value</option>
             {props.categoriesProp &&
               props.categoriesProp.map((item: any) => (
@@ -128,7 +142,7 @@ export const TodosList = (props: any) => {
                 </option>
               ))}
           </select>
-          <select onChange={addPriority}>
+          <select onChange={(event) => setPriority(event.target.value)}>
             <option value="low">low</option>
             <option value="medium">medium</option>
             <option value="high">high</option>
