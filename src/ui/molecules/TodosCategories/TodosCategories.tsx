@@ -6,9 +6,14 @@ import dayjs from 'dayjs';
 import { Context } from 'Context/Context';
 
 export const TodosCategories = () => {
-  const [categories, setCategories] = useState<any>([]);
-  const [categoryName, setCategoryName] = useState<any>('');
-  const [todos, setTodos] = useContext<any>(Context);
+  const {
+    todos,
+    setTodos,
+    categories,
+    setCategories,
+    categoryName,
+    setCategoryName
+  } = useContext<any>(Context);
 
   const addTime = () => {
     const newDate = new Date();
@@ -16,9 +21,12 @@ export const TodosCategories = () => {
     return fromNow;
   };
 
+  const setCategory = () => {
+    setCategoryName(categoryName);
+  };
+
   const SubmitCategorie = useCallback(
     (e: any) => {
-      e.preventDefault();
       setCategories([
         ...categories,
         {
@@ -51,10 +59,22 @@ export const TodosCategories = () => {
         ...category,
         isCompleted: !category.isCompleted
       });
-
       setCategories(newCategories);
     },
     [categories]
+  );
+
+  const editCategory = useCallback(
+    (category: any, index: number) => (e: any) => {
+      const newCategories = [...categories];
+      newCategories.splice(index, 1, {
+        ...category,
+        name: categoryName,
+        updatedAt: addTime()
+      });
+      setCategories(newCategories);
+    },
+    [categoryName, addTime(), categories]
   );
 
   // const filtered = todos.filter((todo:any) =>
@@ -65,6 +85,21 @@ export const TodosCategories = () => {
   //   ))
   // ))
   // setTodos(filtered)
+
+  useEffect(() => {
+    const initialSelectCategory = () => {
+      if (categories[0] !== undefined) {
+        const { categoryName } = categories[0];
+        setCategoryName(categoryName);
+      }
+    };
+    initialSelectCategory();
+  }, []);
+
+  // useEffect(() => {
+  //   setCategoryName(categoryName)
+  //   console.log(categoryName)
+  // }, [categoryName])
 
   useEffect(() => {
     setCategories(categories);
@@ -92,8 +127,9 @@ export const TodosCategories = () => {
               key={category.id}
               deleteCategoryProp={deleteCategory(category)}
               markCompleteProp={markComplete(category, index)}
+              editProp={editCategory(category, index)}
               newDateProp={category.updatedAt}
-              // onClick={}
+              onClick={setCategoryName}
             />
           ))}
       </div>
@@ -101,7 +137,7 @@ export const TodosCategories = () => {
         <div className="categories-div__input">
           <form onSubmit={SubmitCategorie}>
             <input
-              value={categoryName}
+              // value={categoryName}
               onChange={(event) => setCategoryName(event.target.value)}
               type="text"
               placeholder="Category name here"

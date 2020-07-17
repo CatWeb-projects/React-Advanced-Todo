@@ -17,6 +17,8 @@
     min-height: 50px;
     padding: 0 5px;
     border: 2px solid #a71c1c;
+    margin: 2px 0;
+    border-radius: 5px;
     > span {
       font-size: 12px !important;
     }
@@ -59,6 +61,9 @@
     width: 100%;
     display: flex;
     justify-content: flex-end;
+    > div {
+      display: flex;
+    }
     input {
       -webkit-appearance: none;
       padding: 12px;
@@ -71,12 +76,15 @@
     input:checked {
       background-color: #6e6c6c;
     }
+    form:first-child button {
+      margin-right: 5px;
+    }
     button {
       background-color: brown;
       border: none;
       outline: none;
       border-radius: 5px;
-      width: 80px;
+      width: 50px;
       min-height: 25px;
       cursor: pointer;
     }

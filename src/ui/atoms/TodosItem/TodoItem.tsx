@@ -27,6 +27,9 @@ export const TodoItem = (props: any) => {
           checked={isCompleted}
           onChange={props.markCompleteProp}
         />
+        <form onSubmit={props.editTodoProp}>
+          <button>Edit</button>
+        </form>
       </div>
       <div>
         <h3 style={isCompleted ? checkStyle : undefined}>{title}</h3>

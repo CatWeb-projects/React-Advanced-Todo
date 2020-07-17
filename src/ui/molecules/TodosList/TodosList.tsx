@@ -14,11 +14,17 @@ interface Todos {
 }
 
 export const TodosList = (props: any) => {
-  const [todos, setTodos, categories, setCategories] = useContext<any>(Context);
+  const {
+    todos,
+    setTodos,
+    categories,
+    setCategories,
+    categoryName,
+    setCategoryName
+  } = useContext<any>(Context);
   const [title, setTitle] = useState<any>('');
   const [descr, setDescr] = useState<any>('');
   const [priority, setPriority] = useState<any>('low');
-  const [categoryName, setCategoryName] = useState('');
 
   const addTime = () => {
     const newDate = new Date();
@@ -63,6 +69,22 @@ export const TodosList = (props: any) => {
     [todos]
   );
 
+  const editTodo = useCallback(
+    (todo: any, index: number) => (e: any) => {
+      const newTodos = [...todos];
+      newTodos.splice(index, 1, {
+        ...todo,
+        title: title,
+        description: descr,
+        priorityLevel: priority,
+        name: categoryName,
+        updatedAt: addTime()
+      });
+      setTodos(newTodos);
+    },
+    [title, descr, priority, addTime(), todos]
+  );
+
   const deleteTodo = useCallback(
     (todo) => (e: any) => {
       setTodos((prevTodos: any[]) =>
@@ -103,7 +125,7 @@ export const TodosList = (props: any) => {
 
   useEffect(() => {
     setTodos(sortedTodos);
-    // console.log(sortedTodos);
+    console.log(sortedTodos);
   }, [sortedTodos]);
 
   useEffect(() => {
@@ -119,6 +141,7 @@ export const TodosList = (props: any) => {
 
   return (
     <div className="todos-wrapper">
+      <span>Add Todos...</span>
       <div className="todos-wrapper__form">
         <form onSubmit={SubmitTodo}>
           <input
@@ -159,6 +182,7 @@ export const TodosList = (props: any) => {
               deleteTodoProp={deleteTodo(todo)}
               markCompleteProp={markComplete(todo, index)}
               newDateProp={todo.updatedAt}
+              editTodoProp={editTodo(todo, index)}
             />
           ))}
       </div>

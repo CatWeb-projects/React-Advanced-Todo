@@ -1,23 +1,23 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { TodosList } from 'ui/molecules/TodosList/TodosList';
+// import { TodosList } from 'ui/molecules/TodosList/TodosList';
 import { TodosCategories } from 'ui/molecules/TodosCategories/TodosCategories';
 import { Context } from 'Context/Context';
 
 export const TodosMain: any = () => {
   const [todos, setTodos] = useState<any>([]);
   const [categories, setCategories] = useState<any>([]);
-  const [selectedId, setSelectedId] = useState<any>('');
+  const [categoryName, setCategoryName] = useState<any>('');
 
   return (
     <Context.Provider
-      value={[
+      value={{
         todos,
         setTodos,
         categories,
         setCategories,
-        selectedId,
-        setSelectedId
-      ]}
+        categoryName,
+        setCategoryName
+      }}
     >
       <div className="main-container">
         <TodosCategories />
