@@ -21,12 +21,13 @@ export const TodosCategories = () => {
     return fromNow;
   };
 
-  const setCategory = () => {
-    setCategoryName(categoryName);
-  };
+  // const setCategory = () => {
+  //   setCategoryName(categoryName);
+  // };
 
   const SubmitCategorie = useCallback(
     (e: any) => {
+      e.preventDefault();
       setCategories([
         ...categories,
         {
@@ -66,56 +67,58 @@ export const TodosCategories = () => {
 
   const editCategory = useCallback(
     (category: any, index: number) => (e: any) => {
+      e.preventDefault();
       const newCategories = [...categories];
       newCategories.splice(index, 1, {
         ...category,
         name: categoryName,
         updatedAt: addTime()
       });
+      setCategoryName('');
       setCategories(newCategories);
     },
     [categoryName, addTime(), categories]
   );
 
-  // const filtered = todos.filter((todo:any) =>
+  // const filtered = categories.filter((category:any) =>
   // (
-  // todo.name.
-  //   includes(categories.map((filter:any) =>
-  //   filter.name == todo.name ? ([todo, console.log(todo)]) : false
-  //   ))
+  // categories.
+  //   includes(todos.filter((todo:any) =>
+  //   (console.log(category.name, 'filter name'),
+  //   console.log(todo.name, 'todo name'),
+  //   category.name == todo.name && category.isCompleted == true ? ([todo, console.log(todo, 'todo after filtering')]) : false
+  //   )))
   // ))
-  // setTodos(filtered)
 
   useEffect(() => {
-    const initialSelectCategory = () => {
-      if (categories[0] !== undefined) {
-        const { categoryName } = categories[0];
-        setCategoryName(categoryName);
-      }
-    };
-    initialSelectCategory();
-  }, []);
-
-  // useEffect(() => {
-  //   setCategoryName(categoryName)
-  //   console.log(categoryName)
-  // }, [categoryName])
-
-  useEffect(() => {
-    setCategories(categories);
-    console.log(categories);
+    const filtered = categories.filter((category: any) =>
+      category.name.includes(
+        todos.filter(
+          (todo: any) => (
+            todo.name,
+            console.log(category.name, 'filter name'),
+            console.log(todo.name, 'todo name'),
+            category.name == todo.name && category.isCompleted == !true
+              ? setTodos(todos)
+              : false
+          )
+        )
+      )
+    );
+    setTodos(filtered);
+    console.log(filtered);
   }, [categories]);
 
-  useEffect(() => {
-    const data = localStorage.getItem('category-list');
-    if (data) {
-      setCategories(JSON.parse(data));
-    }
-  }, []);
+  // useEffect(() => {
+  //   const data = localStorage.getItem('list');
+  //   if (data) {
+  //     setTodos(JSON.parse(data));
+  //   }
+  // }, []);
 
-  useEffect(() => {
-    localStorage.setItem('category-list', JSON.stringify(categories));
-  });
+  // useEffect(() => {
+  //   localStorage.setItem('list', JSON.stringify(todos));
+  // });
 
   return (
     <div className="categories-div">
@@ -137,7 +140,7 @@ export const TodosCategories = () => {
         <div className="categories-div__input">
           <form onSubmit={SubmitCategorie}>
             <input
-              // value={categoryName}
+              value={categoryName}
               onChange={(event) => setCategoryName(event.target.value)}
               type="text"
               placeholder="Category name here"

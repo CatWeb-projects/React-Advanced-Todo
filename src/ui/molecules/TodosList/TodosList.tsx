@@ -71,6 +71,7 @@ export const TodosList = (props: any) => {
 
   const editTodo = useCallback(
     (todo: any, index: number) => (e: any) => {
+      e.preventDefault();
       const newTodos = [...todos];
       newTodos.splice(index, 1, {
         ...todo,
@@ -80,6 +81,8 @@ export const TodosList = (props: any) => {
         name: categoryName,
         updatedAt: addTime()
       });
+      setTitle('');
+      setDescr('');
       setTodos(newTodos);
     },
     [title, descr, priority, addTime(), todos]
@@ -103,41 +106,10 @@ export const TodosList = (props: any) => {
     return priorities[b.priorityLevel] - priorities[a.priorityLevel];
   });
 
-  // useEffect(() => {
-  //   const filtered = todos.filter((item: any) =>
-  //   (item.name.includes(
-  //     props.categoriesProp.map((filter: any) =>
-  //       filter.name === item.name ? ([item, console.log(item)]) : false
-  //     )
-  //   )
-  // ));
-  // setCategories(filtered)
-  // }, [categories, console.log(categories)])
-
-  // const filtered = todos.filter((todo:any) =>
-  // (
-  // todo.name.
-  //   includes(categories.map((filter:any) =>
-  //   filter.name == todo.name ? ([todo, console.log(todo)]) : false
-  //   ))
-  // ))
-  // setTodos(filtered),
-
   useEffect(() => {
     setTodos(sortedTodos);
     console.log(sortedTodos);
   }, [sortedTodos]);
-
-  useEffect(() => {
-    const data = localStorage.getItem('list');
-    if (data) {
-      setTodos(JSON.parse(data));
-    }
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem('list', JSON.stringify(sortedTodos));
-  });
 
   return (
     <div className="todos-wrapper">
