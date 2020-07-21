@@ -109,7 +109,7 @@ export const TodosList = (props: any) => {
   useEffect(() => {
     setTodos(sortedTodos);
     console.log(sortedTodos);
-  }, [sortedTodos]);
+  }, [todos]);
 
   return (
     <div className="todos-wrapper">
@@ -130,8 +130,8 @@ export const TodosList = (props: any) => {
           />
           <select onChange={addCategoryName}>
             <option>Select Value</option>
-            {props.categoriesProp &&
-              props.categoriesProp.map((item: any) => (
+            {categories &&
+              categories.map((item: any) => (
                 <option key={item.id} value={item.name}>
                   {item.name}
                 </option>

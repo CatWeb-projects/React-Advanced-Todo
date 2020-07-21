@@ -53,16 +53,30 @@ export const TodosCategories = () => {
     [categories]
   );
 
+  // const filtered = categories.filter((category:any) => (
+  //   category.name,
+  //   todos.filter((todo:any) => category.name.includes(todo.name))
+  // ));
+
   const markComplete = useCallback(
     (category: any, index: number) => (event: any) => {
+      const newTodos = [...todos];
       const newCategories = [...categories];
       newCategories.splice(index, 1, {
-        ...category,
-        isCompleted: !category.isCompleted
+        ...category
       });
-      setCategories(newCategories);
+      const filtered = todos.filter((todo: any) => {
+        if (todo.name === category.name) {
+          return;
+        } else {
+          setTodos(newTodos);
+        }
+      });
+
+      setTodos(filtered);
+      console.log(todos);
     },
-    [categories]
+    [todos, categories]
   );
 
   const editCategory = useCallback(
@@ -80,45 +94,37 @@ export const TodosCategories = () => {
     [categoryName, addTime(), categories]
   );
 
-  // const filtered = categories.filter((category:any) =>
-  // (
-  // categories.
-  //   includes(todos.filter((todo:any) =>
-  //   (console.log(category.name, 'filter name'),
-  //   console.log(todo.name, 'todo name'),
-  //   category.name == todo.name && category.isCompleted == true ? ([todo, console.log(todo, 'todo after filtering')]) : false
-  //   )))
-  // ))
-
-  useEffect(() => {
-    const filtered = categories.filter((category: any) =>
-      category.name.includes(
-        todos.filter(
-          (todo: any) => (
-            todo.name,
-            console.log(category.name, 'filter name'),
-            console.log(todo.name, 'todo name'),
-            category.name == todo.name && category.isCompleted == !true
-              ? setTodos(todos)
-              : false
-          )
-        )
-      )
-    );
-    setTodos(filtered);
-    console.log(filtered);
-  }, [categories]);
+  // useEffect(() => {
+  //   const filtered = categories.filter((category: any) =>
+  //     category.name.includes(
+  //       todos.filter(
+  //         (todo: any) => (
+  //           todo.name,
+  //           console.log(category.name, 'filter name'),
+  //           console.log(todo.name, 'todo name'),
+  //           category.name == todo.name && category.isCompleted == !true
+  //             ? console.log(todos, 'this todos')
+  //             : false
+  //         )
+  //       )
+  //     )
+  //   );
+  //   setTodos(filtered);
+  //   console.log(filtered);
+  // }, [categories]);
 
   // useEffect(() => {
-  //   const data = localStorage.getItem('list');
-  //   if (data) {
-  //     setTodos(JSON.parse(data));
-  //   }
-  // }, []);
+  //   const filtered = categories.filter((category:any) => (
+  //     todos.filter((todo:any) => category.name.includes(todo.name)),
+  //       console.log(todos)
+  //     ));
+  //   setTodos(filtered);
+  // }, [categories]);
 
   // useEffect(() => {
-  //   localStorage.setItem('list', JSON.stringify(todos));
-  // });
+  //   setCategories(categories)
+  //   console.log(categories)
+  // }, [categories])
 
   return (
     <div className="categories-div">
