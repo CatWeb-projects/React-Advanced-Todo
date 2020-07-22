@@ -106,10 +106,10 @@ export const TodosList = (props: any) => {
     return priorities[b.priorityLevel] - priorities[a.priorityLevel];
   });
 
-  useEffect(() => {
-    setTodos(sortedTodos);
-    console.log(sortedTodos);
-  }, [todos]);
+  // useEffect(() => {
+  //   setTodos(sortedTodos);
+  //   console.log(sortedTodos);
+  // }, [todos]);
 
   return (
     <div className="todos-wrapper">

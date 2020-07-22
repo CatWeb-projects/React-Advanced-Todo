@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect, useContext } from 'react';
+import React, { useState, useCallback, useEffect, useContext, useRef } from 'react';
 import { CategoriesItem } from 'ui/atoms/CategoriesItem/CategoriesItem';
 import { TodosList } from '../TodosList/TodosList';
 import { v4 as uuid } from 'uuid';
@@ -58,23 +58,42 @@ export const TodosCategories = () => {
   //   todos.filter((todo:any) => category.name.includes(todo.name))
   // ));
 
+  const prevTodosRef = useRef();
+  useEffect(() => {
+    prevTodosRef.current = todos;
+  });
+  const prevTodos = prevTodosRef.current;
+  
   const markComplete = useCallback(
     (category: any, index: number) => (event: any) => {
-      const newTodos = [...todos];
       const newCategories = [...categories];
-      newCategories.splice(index, 1, {
-        ...category
-      });
+      const newTodos = [...todos]
+
+      
+
+      // const r = todos.filter((todo:any) => categories.find((filter:any) => todo.name == filter.name));
+      // setTodos(r)
+      // console.log(r)
+
       const filtered = todos.filter((todo: any) => {
-        if (todo.name === category.name) {
-          return;
-        } else {
-          setTodos(newTodos);
-        }
+          setTodos(prevTodos)
+          console.log(prevTodos)
+        if (todo.name == category.name) {
+          return todos.includes(todo)
+        } 
+      });
+      setTodos(filtered);
+      console.log(filtered, 'filtered');
+
+
+      newCategories.splice(index, 1, {
+        ...category,
+        isCompleted: !category.isCompleted
       });
 
-      setTodos(filtered);
-      console.log(todos);
+    
+
+     
     },
     [todos, categories]
   );
