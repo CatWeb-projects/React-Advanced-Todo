@@ -10,7 +10,8 @@ interface Todos {
   description: string;
   isCompleted: boolean;
   priorityLevel: string;
-  updatedAt: any;
+  name: string;
+  updatedAt: string;
 }
 
 export const TodosList = (props: any) => {
@@ -20,8 +21,13 @@ export const TodosList = (props: any) => {
     categories,
     setCategories,
     categoryName,
-    setCategoryName
+    setCategoryName,
+    filteredCategory,
+    setFilteredCategory,
+    newFilterTodoTask,
+    setNewFilterTodoTask
   } = useContext<any>(Context);
+
   const [title, setTitle] = useState<any>('');
   const [descr, setDescr] = useState<any>('');
   const [priority, setPriority] = useState<any>('low');
@@ -60,10 +66,7 @@ export const TodosList = (props: any) => {
   const markComplete = useCallback(
     (todo: any, index: number) => (event: any) => {
       const newTodos = [...todos];
-      newTodos.splice(index, 1, {
-        ...todo,
-        isCompleted: !todo.isCompleted
-      });
+      newTodos[index].isCompleted = !newTodos[index].isCompleted;
       setTodos(newTodos);
     },
     [todos]
@@ -72,7 +75,7 @@ export const TodosList = (props: any) => {
   const editTodo = useCallback(
     (todo: any, index: number) => (e: any) => {
       e.preventDefault();
-      const newTodos = [...todos];
+      const newTodos = [...newFilterTodoTask];
       newTodos.splice(index, 1, {
         ...todo,
         title: title,
@@ -106,10 +109,10 @@ export const TodosList = (props: any) => {
     return priorities[b.priorityLevel] - priorities[a.priorityLevel];
   });
 
-  // useEffect(() => {
-  //   setTodos(sortedTodos);
-  //   console.log(sortedTodos);
-  // }, [todos]);
+  useEffect(() => {
+    setTodos(sortedTodos);
+    console.log(sortedTodos);
+  }, [todos]);
 
   return (
     <div className="todos-wrapper">
@@ -146,8 +149,8 @@ export const TodosList = (props: any) => {
         </form>
       </div>
       <div className="todos-wrapper__mapping">
-        {todos &&
-          todos.map((todo: Todos, index: number) => (
+        {(filteredCategory ? newFilterTodoTask : todos).map(
+          (todo: Todos, index: number) => (
             <TodoItem
               todoProps={todo}
               key={todo.id}
@@ -156,7 +159,8 @@ export const TodosList = (props: any) => {
               newDateProp={todo.updatedAt}
               editTodoProp={editTodo(todo, index)}
             />
-          ))}
+          )
+        )}
       </div>
     </div>
   );

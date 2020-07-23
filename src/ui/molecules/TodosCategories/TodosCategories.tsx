@@ -1,9 +1,15 @@
-import React, { useState, useCallback, useEffect, useContext, useRef } from 'react';
+import React, {
+  useState,
+  useCallback,
+  useEffect,
+  useContext,
+  useRef
+} from 'react';
 import { CategoriesItem } from 'ui/atoms/CategoriesItem/CategoriesItem';
 import { TodosList } from '../TodosList/TodosList';
 import { v4 as uuid } from 'uuid';
 import dayjs from 'dayjs';
-import { Context } from 'Context/Context';
+import { ProviderContext, Context } from 'Context/Context';
 
 export const TodosCategories = () => {
   const {
@@ -12,7 +18,11 @@ export const TodosCategories = () => {
     categories,
     setCategories,
     categoryName,
-    setCategoryName
+    setCategoryName,
+    filteredCategory,
+    setFilteredCategory,
+    newFilterTodoTask,
+    setNewFilterTodoTask
   } = useContext<any>(Context);
 
   const addTime = () => {
@@ -20,10 +30,6 @@ export const TodosCategories = () => {
     const fromNow = dayjs(newDate).format('MMM D, YYYY h:mm:ss A');
     return fromNow;
   };
-
-  // const setCategory = () => {
-  //   setCategoryName(categoryName);
-  // };
 
   const SubmitCategorie = useCallback(
     (e: any) => {
@@ -52,51 +58,26 @@ export const TodosCategories = () => {
     },
     [categories]
   );
-
-  // const filtered = categories.filter((category:any) => (
-  //   category.name,
-  //   todos.filter((todo:any) => category.name.includes(todo.name))
-  // ));
-
-  const prevTodosRef = useRef();
-  useEffect(() => {
-    prevTodosRef.current = todos;
-  });
-  const prevTodos = prevTodosRef.current;
-  
   const markComplete = useCallback(
-    (category: any, index: number) => (event: any) => {
+    (category: any, index: number) => (e: any) => {
       const newCategories = [...categories];
-      const newTodos = [...todos]
-
-      
-
-      // const r = todos.filter((todo:any) => categories.find((filter:any) => todo.name == filter.name));
-      // setTodos(r)
-      // console.log(r)
-
-      const filtered = todos.filter((todo: any) => {
-          setTodos(prevTodos)
-          console.log(prevTodos)
-        if (todo.name == category.name) {
-          return todos.includes(todo)
-        } 
-      });
-      setTodos(filtered);
-      console.log(filtered, 'filtered');
-
-
-      newCategories.splice(index, 1, {
-        ...category,
-        isCompleted: !category.isCompleted
-      });
-
-    
-
-     
+      e.preventDefault();
+      setFilteredCategory(category);
+      // newCategories[index].isCompleted = !newCategories[index].isCompleted;
+      // setCategories(categories);
     },
-    [todos, categories]
+    []
   );
+
+  useEffect(() => {
+    const filtered = todos.filter((todo: any) => {
+      if (todo.name == filteredCategory.name) {
+        return true;
+      }
+      return false;
+    });
+    setNewFilterTodoTask(filtered);
+  }, [filteredCategory, todos]);
 
   const editCategory = useCallback(
     (category: any, index: number) => (e: any) => {
@@ -112,38 +93,6 @@ export const TodosCategories = () => {
     },
     [categoryName, addTime(), categories]
   );
-
-  // useEffect(() => {
-  //   const filtered = categories.filter((category: any) =>
-  //     category.name.includes(
-  //       todos.filter(
-  //         (todo: any) => (
-  //           todo.name,
-  //           console.log(category.name, 'filter name'),
-  //           console.log(todo.name, 'todo name'),
-  //           category.name == todo.name && category.isCompleted == !true
-  //             ? console.log(todos, 'this todos')
-  //             : false
-  //         )
-  //       )
-  //     )
-  //   );
-  //   setTodos(filtered);
-  //   console.log(filtered);
-  // }, [categories]);
-
-  // useEffect(() => {
-  //   const filtered = categories.filter((category:any) => (
-  //     todos.filter((todo:any) => category.name.includes(todo.name)),
-  //       console.log(todos)
-  //     ));
-  //   setTodos(filtered);
-  // }, [categories]);
-
-  // useEffect(() => {
-  //   setCategories(categories)
-  //   console.log(categories)
-  // }, [categories])
 
   return (
     <div className="categories-div">
