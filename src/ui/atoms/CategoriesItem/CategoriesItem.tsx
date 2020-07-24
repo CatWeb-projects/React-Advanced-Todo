@@ -1,9 +1,7 @@
-import React, { useContext } from 'react';
-import { Context } from 'Context/Context';
+import React from 'react';
 
 export const CategoriesItem = (props: any) => {
   const { name, isCompleted } = props.categorieProps;
-  const { categoryName, setCategoryName } = useContext<any>(Context);
 
   const checkDiv = {
     background: 'linear-gradient(to bottom, #27ff00, #3b9a29)'

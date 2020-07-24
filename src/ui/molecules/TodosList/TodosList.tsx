@@ -14,23 +14,20 @@ interface Todos {
   updatedAt: string;
 }
 
-export const TodosList = (props: any) => {
+export const TodosList = () => {
   const {
     todos,
     setTodos,
     categories,
-    setCategories,
     categoryName,
     setCategoryName,
     filteredCategory,
-    setFilteredCategory,
-    newFilterTodoTask,
-    setNewFilterTodoTask
+    newFilterTodoTask
   } = useContext<any>(Context);
 
-  const [title, setTitle] = useState<any>('');
-  const [descr, setDescr] = useState<any>('');
-  const [priority, setPriority] = useState<any>('low');
+  const [title, setTitle] = useState('');
+  const [descr, setDescr] = useState('');
+  const [priority, setPriority] = useState('low');
 
   const addTime = () => {
     const newDate = new Date();
@@ -43,8 +40,11 @@ export const TodosList = (props: any) => {
   };
 
   const SubmitTodo = useCallback(
-    (e: any) => {
+    (e) => {
       e.preventDefault();
+      if (title === '') {
+        return null;
+      }
       setTodos([
         ...todos,
         {
@@ -64,29 +64,36 @@ export const TodosList = (props: any) => {
   );
 
   const markComplete = useCallback(
-    (todo: any, index: number) => (event: any) => {
-      const newTodos = [...todos];
-      newTodos[index].isCompleted = !newTodos[index].isCompleted;
-      setTodos(newTodos);
+    (id: number) => () => {
+      setTodos((prevNewTodos: any) =>
+        prevNewTodos.map((todo: any) => ({
+          ...todo,
+          isCompleted: todo.id === id ? !todo.isCompleted : todo.isCompleted
+        }))
+      );
     },
-    [todos]
+    []
   );
 
   const editTodo = useCallback(
-    (todo: any, index: number) => (e: any) => {
+    (id: any) => (e: any) => {
       e.preventDefault();
-      const newTodos = [...newFilterTodoTask];
-      newTodos.splice(index, 1, {
-        ...todo,
-        title: title,
-        description: descr,
-        priorityLevel: priority,
-        name: categoryName,
-        updatedAt: addTime()
-      });
+      setTodos((prevNewTodos: any) =>
+        prevNewTodos.map((todo: any) =>
+          todo.id === id
+            ? {
+                id: id,
+                title: title,
+                description: descr,
+                priorityLevel: priority,
+                name: categoryName,
+                updatedAt: addTime()
+              }
+            : todo
+        )
+      );
       setTitle('');
       setDescr('');
-      setTodos(newTodos);
     },
     [title, descr, priority, addTime(), todos]
   );
@@ -149,18 +156,16 @@ export const TodosList = (props: any) => {
         </form>
       </div>
       <div className="todos-wrapper__mapping">
-        {(filteredCategory ? newFilterTodoTask : todos).map(
-          (todo: Todos, index: number) => (
-            <TodoItem
-              todoProps={todo}
-              key={todo.id}
-              deleteTodoProp={deleteTodo(todo)}
-              markCompleteProp={markComplete(todo, index)}
-              newDateProp={todo.updatedAt}
-              editTodoProp={editTodo(todo, index)}
-            />
-          )
-        )}
+        {(filteredCategory ? newFilterTodoTask : todos).map((todo: Todos) => (
+          <TodoItem
+            todoProps={todo}
+            key={todo.id}
+            deleteTodoProp={deleteTodo(todo)}
+            markCompleteProp={markComplete(todo.id)}
+            newDateProp={todo.updatedAt}
+            editTodoProp={editTodo(todo.id)}
+          />
+        ))}
       </div>
     </div>
   );

@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 
-interface Categories {
+export interface Categories {
   id: number;
   name: string;
   isCompleted: boolean;
   updatedAt: string;
 }
 
-interface Todos {
+export interface Todos {
   id: number;
   title: string;
   description: string;
@@ -47,10 +47,10 @@ export const Context = React.createContext<Props>(defaultValue);
 
 export const ProviderContext = (props: any) => {
   const [todos, setTodos] = useState<Todos[]>([]);
-  const [categories, setCategories] = useState<any>([]);
-  const [categoryName, setCategoryName] = useState<any>('');
-  const [filteredCategory, setFilteredCategory] = useState<any>('');
-  const [newFilterTodoTask, setNewFilterTodoTask] = useState<any>([]);
+  const [categories, setCategories] = useState<Categories[]>([]);
+  const [categoryName, setCategoryName] = useState<string>('');
+  const [filteredCategory, setFilteredCategory] = useState<string>('');
+  const [newFilterTodoTask, setNewFilterTodoTask] = useState<Todos[]>([]);
 
   useEffect(() => {
     const data = localStorage.getItem('list');

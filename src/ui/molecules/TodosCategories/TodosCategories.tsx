@@ -1,27 +1,19 @@
-import React, {
-  useState,
-  useCallback,
-  useEffect,
-  useContext,
-  useRef
-} from 'react';
+import React, { useCallback, useEffect, useContext } from 'react';
 import { CategoriesItem } from 'ui/atoms/CategoriesItem/CategoriesItem';
 import { TodosList } from '../TodosList/TodosList';
 import { v4 as uuid } from 'uuid';
 import dayjs from 'dayjs';
-import { ProviderContext, Context } from 'Context/Context';
+import { Context, Categories, Todos } from 'Context/Context';
 
 export const TodosCategories = () => {
   const {
     todos,
-    setTodos,
     categories,
     setCategories,
     categoryName,
     setCategoryName,
     filteredCategory,
     setFilteredCategory,
-    newFilterTodoTask,
     setNewFilterTodoTask
   } = useContext<any>(Context);
 
@@ -32,8 +24,11 @@ export const TodosCategories = () => {
   };
 
   const SubmitCategorie = useCallback(
-    (e: any) => {
+    (e) => {
       e.preventDefault();
+      if (categoryName === '') {
+        return null;
+      }
       setCategories([
         ...categories,
         {
@@ -49,28 +44,30 @@ export const TodosCategories = () => {
   );
 
   const deleteCategory = useCallback(
-    (categorie) => (e: any) => {
-      setCategories((prevCategories: any[]) =>
+    (categorie) => () => {
+      setCategories((prevCategories: any) =>
         prevCategories.filter(
-          (otherCategorie: any) => otherCategorie !== categorie
+          (otherCategorie: Categories) => otherCategorie !== categorie
         )
       );
     },
     [categories]
   );
   const markComplete = useCallback(
-    (category: any, index: number) => (e: any) => {
-      const newCategories = [...categories];
-      e.preventDefault();
+    (id, category) => () => {
       setFilteredCategory(category);
-      // newCategories[index].isCompleted = !newCategories[index].isCompleted;
-      // setCategories(categories);
+      setCategories((prevNewTodos: any) =>
+        prevNewTodos.map((prevCategory: Categories) => ({
+          ...prevCategory,
+          isCompleted: prevCategory.id === id ? true : false
+        }))
+      );
     },
     []
   );
 
   useEffect(() => {
-    const filtered = todos.filter((todo: any) => {
+    const filtered = todos.filter((todo: Todos) => {
       if (todo.name == filteredCategory.name) {
         return true;
       }
@@ -80,7 +77,7 @@ export const TodosCategories = () => {
   }, [filteredCategory, todos]);
 
   const editCategory = useCallback(
-    (category: any, index: number) => (e: any) => {
+    (category, index) => (e: any) => {
       e.preventDefault();
       const newCategories = [...categories];
       newCategories.splice(index, 1, {
@@ -93,17 +90,18 @@ export const TodosCategories = () => {
     },
     [categoryName, addTime(), categories]
   );
+  console.log(categories);
 
   return (
     <div className="categories-div">
       <div className="categories-div__each-category">
         {categories &&
-          categories.map((category: any, index: number) => (
+          categories.map((category: Categories, index: number) => (
             <CategoriesItem
               categorieProps={category}
               key={category.id}
               deleteCategoryProp={deleteCategory(category)}
-              markCompleteProp={markComplete(category, index)}
+              markCompleteProp={markComplete(category.id, category)}
               editProp={editCategory(category, index)}
               newDateProp={category.updatedAt}
               onClick={setCategoryName}
@@ -122,7 +120,7 @@ export const TodosCategories = () => {
             <button>Add</button>
           </form>
         </div>
-        <TodosList categoriesProp={categories} />
+        <TodosList />
       </div>
     </div>
   );

@@ -55,6 +55,12 @@
       cursor: pointer;
       font-size: 20px;
       color: #fff;
+      transition: 0.5s all ease-in;
+    }
+    > button:hover {
+      background-color: #0fe219;
+      box-shadow: 0 0 2px 2px #0fe219;
+      border: none;
     }
   }
   &__check {
@@ -87,6 +93,12 @@
       width: 50px;
       min-height: 25px;
       cursor: pointer;
+      transition: 0.5s all ease-in;
+    }
+    button:hover {
+      background-color: #8a2424;
+      box-shadow: 0 0 2px 2px #8a2424;
+      border: none;
     }
   }
   &__add-category {

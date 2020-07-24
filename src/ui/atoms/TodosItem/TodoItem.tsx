@@ -6,6 +6,7 @@ interface ItemProps {
   description: string;
   isCompleted: boolean;
   priorityLevel: string;
+  updatedAt: string;
 }
 
 export const TodoItem = (props: any) => {

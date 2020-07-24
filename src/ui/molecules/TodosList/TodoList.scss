@@ -19,6 +19,10 @@
     button {
       width: 10%;
       cursor: pointer;
+      transition: 0.5s all ease-in;
+    }
+    button:hover {
+      background-color: #0fe219;
     }
     button,
     select,
@@ -60,6 +64,12 @@
       width: 80px;
       cursor: pointer;
       height: 30px;
+      transition: 0.5s all ease-in;
+    }
+    button:hover {
+      background-color: #8a2424;
+      box-shadow: 0 0 2px 2px #8a2424;
+      border: none;
     }
   }
   &__button-div {
@@ -83,6 +93,12 @@
       cursor: pointer;
       height: 30px;
       align-self: flex-end;
+      transition: 0.5s all ease-in;
+    }
+    button:hover {
+      background-color: #8a2424;
+      box-shadow: 0 0 2px 2px #8a2424;
+      border: none;
     }
   }
   input {
