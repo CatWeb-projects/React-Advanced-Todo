@@ -1,15 +1,15 @@
 import React from 'react';
+import { Todos } from 'Context/Context';
 
 interface ItemProps {
-  id: any;
-  title: string;
-  description: string;
-  isCompleted: boolean;
-  priorityLevel: string;
-  updatedAt: string;
+  todoProps: Todos;
+  newDateProp: string;
+  deleteTodoProp: (id: number) => void;
+  markCompleteProp: (id: number) => void;
+  editTodoProp: (id: any) => void;
 }
 
-export const TodoItem = (props: any) => {
+export const TodoItem = (props: ItemProps) => {
   const { title, description, isCompleted, priorityLevel } = props.todoProps;
 
   const checkStyle = {
@@ -26,10 +26,10 @@ export const TodoItem = (props: any) => {
         <input
           type="checkbox"
           checked={isCompleted}
-          onChange={props.markCompleteProp}
+          onChange={() => props.markCompleteProp(props.todoProps.id)}
         />
-        <form onSubmit={props.editTodoProp}>
-          <button>Edit</button>
+        <form>
+          <button onClick={props.editTodoProp}>Edit</button>
         </form>
       </div>
       <div>
@@ -44,11 +44,13 @@ export const TodoItem = (props: any) => {
         </span>
       </div>
       <div className="each-item__button-div">
-        <form onSubmit={props.deleteTodoProp}>
+        <form>
           <span style={isCompleted ? checkStyle : undefined}>
             Priority: {priorityLevel}
           </span>
-          <button>Delete</button>
+          <button onClick={() => props.deleteTodoProp(props.todoProps.id)}>
+            Delete
+          </button>
         </form>
       </div>
     </div>

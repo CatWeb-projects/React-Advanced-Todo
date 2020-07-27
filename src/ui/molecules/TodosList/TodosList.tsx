@@ -63,23 +63,20 @@ export const TodosList = () => {
     [title, descr, categoryName, priority, addTime(), todos]
   );
 
-  const markComplete = useCallback(
-    (id: number) => () => {
-      setTodos((prevNewTodos: any) =>
-        prevNewTodos.map((todo: any) => ({
-          ...todo,
-          isCompleted: todo.id === id ? !todo.isCompleted : todo.isCompleted
-        }))
-      );
-    },
-    []
-  );
+  const markComplete = useCallback((id) => {
+    setTodos((prevNewTodos: Todos[]) =>
+      prevNewTodos.map((todo: Todos) => ({
+        ...todo,
+        isCompleted: todo.id === id ? !todo.isCompleted : todo.isCompleted
+      }))
+    );
+  }, []);
 
   const editTodo = useCallback(
-    (id: any) => (e: any) => {
+    (id) => (e: any) => {
       e.preventDefault();
-      setTodos((prevNewTodos: any) =>
-        prevNewTodos.map((todo: any) =>
+      setTodos((prevNewTodos: Todos[]) =>
+        prevNewTodos.map((todo: Todos) =>
           todo.id === id
             ? {
                 id: id,
@@ -99,9 +96,9 @@ export const TodosList = () => {
   );
 
   const deleteTodo = useCallback(
-    (todo) => (e: any) => {
-      setTodos((prevTodos: any[]) =>
-        prevTodos.filter((otherTodo: any) => otherTodo !== todo)
+    (id) => {
+      setTodos((prevTodos: Todos[]) =>
+        prevTodos.filter((otherTodo: Todos) => otherTodo.id !== id)
       );
     },
     [todos]
@@ -112,14 +109,9 @@ export const TodosList = () => {
     medium: 2,
     high: 3
   };
-  const sortedTodos = todos.sort((a: any, b: any) => {
+  const sortedTodos = todos.sort((a: Todos, b: Todos) => {
     return priorities[b.priorityLevel] - priorities[a.priorityLevel];
   });
-
-  useEffect(() => {
-    setTodos(sortedTodos);
-    console.log(sortedTodos);
-  }, [todos]);
 
   return (
     <div className="todos-wrapper">
@@ -160,8 +152,8 @@ export const TodosList = () => {
           <TodoItem
             todoProps={todo}
             key={todo.id}
-            deleteTodoProp={deleteTodo(todo)}
-            markCompleteProp={markComplete(todo.id)}
+            deleteTodoProp={deleteTodo}
+            markCompleteProp={markComplete}
             newDateProp={todo.updatedAt}
             editTodoProp={editTodo(todo.id)}
           />

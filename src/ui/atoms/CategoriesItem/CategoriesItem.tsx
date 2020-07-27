@@ -1,6 +1,15 @@
 import React from 'react';
+import { Categories } from 'Context/Context';
 
-export const CategoriesItem = (props: any) => {
+interface ItemProps {
+  categorieProps: Categories;
+  newDateProp: string;
+  deleteCategoryProp: (id: number) => void;
+  markCompleteProp: () => void;
+  editProp: (e: any) => void;
+}
+
+export const CategoriesItem = (props: ItemProps) => {
   const { name, isCompleted } = props.categorieProps;
 
   const checkDiv = {
@@ -20,8 +29,12 @@ export const CategoriesItem = (props: any) => {
           <form onSubmit={props.editProp}>
             <button>Edit</button>
           </form>
-          <form onSubmit={props.deleteCategoryProp}>
-            <button>Delete</button>
+          <form>
+            <button
+              onClick={() => props.deleteCategoryProp(props.categorieProps.id)}
+            >
+              Delete
+            </button>
           </form>
         </div>
         <input

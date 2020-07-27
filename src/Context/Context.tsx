@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 
 export interface Categories {
   id: number;
@@ -17,7 +17,7 @@ export interface Todos {
   updatedAt: string;
 }
 
-interface Props {
+export interface Props {
   todos: Todos[];
   categories: Categories[];
   categoryName: string;

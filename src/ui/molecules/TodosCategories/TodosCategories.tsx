@@ -44,10 +44,10 @@ export const TodosCategories = () => {
   );
 
   const deleteCategory = useCallback(
-    (categorie) => () => {
-      setCategories((prevCategories: any) =>
+    (id) => {
+      setCategories((prevCategories: Categories[]) =>
         prevCategories.filter(
-          (otherCategorie: Categories) => otherCategorie !== categorie
+          (otherCategory: Categories) => otherCategory.id !== id
         )
       );
     },
@@ -56,7 +56,7 @@ export const TodosCategories = () => {
   const markComplete = useCallback(
     (id, category) => () => {
       setFilteredCategory(category);
-      setCategories((prevNewTodos: any) =>
+      setCategories((prevNewTodos: Categories[]) =>
         prevNewTodos.map((prevCategory: Categories) => ({
           ...prevCategory,
           isCompleted: prevCategory.id === id ? true : false
@@ -90,7 +90,6 @@ export const TodosCategories = () => {
     },
     [categoryName, addTime(), categories]
   );
-  console.log(categories);
 
   return (
     <div className="categories-div">
@@ -100,11 +99,10 @@ export const TodosCategories = () => {
             <CategoriesItem
               categorieProps={category}
               key={category.id}
-              deleteCategoryProp={deleteCategory(category)}
+              deleteCategoryProp={deleteCategory}
               markCompleteProp={markComplete(category.id, category)}
               editProp={editCategory(category, index)}
               newDateProp={category.updatedAt}
-              onClick={setCategoryName}
             />
           ))}
       </div>
