@@ -8,12 +8,14 @@ import { Context, Categories, Todos } from 'Context/Context';
 export const TodosCategories = () => {
   const {
     todos,
+    setTodos,
     categories,
     setCategories,
     categoryName,
     setCategoryName,
     filteredCategory,
     setFilteredCategory,
+    newFilterTodoTask,
     setNewFilterTodoTask
   } = useContext<any>(Context);
 
@@ -40,19 +42,10 @@ export const TodosCategories = () => {
       ]);
       setCategoryName('');
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [categoryName, addTime(), categories]
   );
 
-  const deleteCategory = useCallback(
-    (id) => {
-      setCategories((prevCategories: Categories[]) =>
-        prevCategories.filter(
-          (otherCategory: Categories) => otherCategory.id !== id
-        )
-      );
-    },
-    [categories]
-  );
   const markComplete = useCallback(
     (id, category) => () => {
       setFilteredCategory(category);
@@ -63,18 +56,40 @@ export const TodosCategories = () => {
         }))
       );
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
 
   useEffect(() => {
     const filtered = todos.filter((todo: Todos) => {
-      if (todo.name == filteredCategory.name) {
+      if (todo.name === filteredCategory.name) {
         return true;
       }
       return false;
     });
     setNewFilterTodoTask(filtered);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filteredCategory, todos]);
+
+  const deleteCategory = useCallback(
+    (id) => {
+      setCategories((prevCategories: Categories[]) =>
+        prevCategories.filter(
+          (otherCategory: Categories) => otherCategory.id !== id
+        )
+      );
+      setTodos((prevTask: any) =>
+        prevTask.filter(
+          (otherTask: any) => otherTask.name !== filteredCategory.name
+        )
+      );
+      console.log(categories, 'categories');
+      console.log(newFilterTodoTask, 'filtered tasks');
+      console.log(filteredCategory, 'filtered category');
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [categories, todos]
+  );
 
   const editCategory = useCallback(
     (category, index) => (e: any) => {
@@ -88,6 +103,7 @@ export const TodosCategories = () => {
       setCategoryName('');
       setCategories(newCategories);
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [categoryName, addTime(), categories]
   );
 
