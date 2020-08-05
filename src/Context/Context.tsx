@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
 
 export interface Categories {
-  id: number;
+  id: any;
   name: string;
   isCompleted: boolean;
   updatedAt: string;
 }
 
 export interface Todos {
-  id: number;
+  id: string;
   title: string;
   description: string;
   isCompleted: boolean;

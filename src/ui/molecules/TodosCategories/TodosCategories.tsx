@@ -47,14 +47,8 @@ export const TodosCategories = () => {
   );
 
   const markComplete = useCallback(
-    (id, category) => () => {
+    (category) => () => {
       setFilteredCategory(category);
-      setCategories((prevNewTodos: Categories[]) =>
-        prevNewTodos.map((prevCategory: Categories) => ({
-          ...prevCategory,
-          isCompleted: prevCategory.id === id ? true : false
-        }))
-      );
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
@@ -78,17 +72,14 @@ export const TodosCategories = () => {
           (otherCategory: Categories) => otherCategory.id !== id
         )
       );
-      setTodos((prevTask: any) =>
+      setTodos((prevTask: Todos[]) =>
         prevTask.filter(
-          (otherTask: any) => otherTask.name !== filteredCategory.name
+          (otherTask: Todos) => otherTask.name !== filteredCategory.name
         )
       );
-      console.log(categories, 'categories');
-      console.log(newFilterTodoTask, 'filtered tasks');
-      console.log(filteredCategory, 'filtered category');
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [categories, todos]
+    [filteredCategory]
   );
 
   const editCategory = useCallback(
@@ -113,10 +104,10 @@ export const TodosCategories = () => {
         {categories &&
           categories.map((category: Categories, index: number) => (
             <CategoriesItem
-              categorieProps={category}
+              categoryProps={category}
               key={category.id}
               deleteCategoryProp={deleteCategory}
-              markCompleteProp={markComplete(category.id, category)}
+              markCompleteProp={markComplete(category)}
               editProp={editCategory(category, index)}
               newDateProp={category.updatedAt}
             />
@@ -126,7 +117,6 @@ export const TodosCategories = () => {
         <div className="categories-div__input">
           <form onSubmit={SubmitCategorie}>
             <input
-              value={categoryName}
               onChange={(event) => setCategoryName(event.target.value)}
               type="text"
               placeholder="Category name here"

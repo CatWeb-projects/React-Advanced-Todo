@@ -1,18 +1,8 @@
-import React, { useState, useEffect, useCallback, useContext } from 'react';
+import React, { useState, useCallback, useContext } from 'react';
 import { TodoItem } from 'ui/atoms/TodosItem/TodoItem';
 import dayjs from 'dayjs';
 import { v4 as uuid } from 'uuid';
 import { Context } from 'Context/Context';
-
-interface Todos {
-  id: number;
-  title: string;
-  description: string;
-  isCompleted: boolean;
-  priorityLevel: string;
-  name: string;
-  updatedAt: string;
-}
 
 export const TodosList = () => {
   const {
@@ -23,7 +13,7 @@ export const TodosList = () => {
     setCategoryName,
     filteredCategory,
     newFilterTodoTask
-  } = useContext<any>(Context);
+  } = useContext(Context);
 
   const [title, setTitle] = useState('');
   const [descr, setDescr] = useState('');
@@ -64,8 +54,8 @@ export const TodosList = () => {
   );
 
   const markComplete = useCallback((id) => {
-    setTodos((prevNewTodos: Todos[]) =>
-      prevNewTodos.map((todo: Todos) => ({
+    setTodos((prevNewTodos) =>
+      prevNewTodos.map((todo) => ({
         ...todo,
         isCompleted: todo.id === id ? !todo.isCompleted : todo.isCompleted
       }))
@@ -75,8 +65,8 @@ export const TodosList = () => {
   const editTodo = useCallback(
     (id) => (e: any) => {
       e.preventDefault();
-      setTodos((prevNewTodos: Todos[]) =>
-        prevNewTodos.map((todo: Todos) =>
+      setTodos((prevNewTodos) =>
+        prevNewTodos.map((todo: any) =>
           todo.id === id
             ? {
                 id: id,
@@ -92,13 +82,13 @@ export const TodosList = () => {
       setTitle('');
       setDescr('');
     },
-    [title, descr, priority, addTime(), todos]
+    [title, descr, priority, categoryName, addTime(), todos]
   );
 
   const deleteTodo = useCallback(
     (id) => {
-      setTodos((prevTodos: Todos[]) =>
-        prevTodos.filter((otherTodo: Todos) => otherTodo.id !== id)
+      setTodos((prevTodos) =>
+        prevTodos.filter((otherTodo) => otherTodo.id !== id)
       );
     },
     [todos]
@@ -109,7 +99,7 @@ export const TodosList = () => {
     medium: 2,
     high: 3
   };
-  const sortedTodos = todos.sort((a: Todos, b: Todos) => {
+  const sortedTodos = todos.sort((a, b) => {
     return priorities[b.priorityLevel] - priorities[a.priorityLevel];
   });
 
@@ -133,7 +123,7 @@ export const TodosList = () => {
           <select onChange={addCategoryName}>
             <option>Select Value</option>
             {categories &&
-              categories.map((item: any) => (
+              categories.map((item) => (
                 <option key={item.id} value={item.name}>
                   {item.name}
                 </option>
@@ -148,7 +138,7 @@ export const TodosList = () => {
         </form>
       </div>
       <div className="todos-wrapper__mapping">
-        {(filteredCategory ? newFilterTodoTask : todos).map((todo: Todos) => (
+        {(filteredCategory ? newFilterTodoTask : todos).map((todo) => (
           <TodoItem
             todoProps={todo}
             key={todo.id}

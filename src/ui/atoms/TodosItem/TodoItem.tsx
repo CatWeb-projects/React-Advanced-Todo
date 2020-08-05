@@ -1,16 +1,19 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Todos } from 'Context/Context';
 
 interface ItemProps {
   todoProps: Todos;
   newDateProp: string;
-  deleteTodoProp: (id: number) => void;
-  markCompleteProp: (id: number) => void;
+  deleteTodoProp: (id: any) => void;
+  markCompleteProp: (id: any) => void;
   editTodoProp: (id: any) => void;
 }
 
 export const TodoItem = (props: ItemProps) => {
-  const { title, description, isCompleted, priorityLevel } = props.todoProps;
+  const { title, description, isCompleted, priorityLevel } = useMemo(
+    () => props.todoProps,
+    [props.todoProps]
+  );
 
   const checkStyle = {
     textDecoration: 'line-through',

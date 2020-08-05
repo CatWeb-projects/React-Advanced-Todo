@@ -1,8 +1,8 @@
-import React from 'react';
-import { Categories } from 'Context/Context';
+import React, { useMemo, useContext } from 'react';
+import { Categories, Context } from 'Context/Context';
 
 interface ItemProps {
-  categorieProps: Categories;
+  categoryProps: Categories;
   newDateProp: string;
   deleteCategoryProp: (id: number) => void;
   markCompleteProp: () => void;
@@ -10,7 +10,8 @@ interface ItemProps {
 }
 
 export const CategoriesItem = (props: ItemProps) => {
-  const { name, isCompleted } = props.categorieProps;
+  const { filteredCategory } = useContext<any>(Context);
+  const { name } = useMemo(() => props.categoryProps, [props.categoryProps]);
 
   const checkDiv = {
     background: 'linear-gradient(to bottom, #27ff00, #3b9a29)'
@@ -18,7 +19,7 @@ export const CategoriesItem = (props: ItemProps) => {
 
   return (
     <div
-      style={isCompleted ? checkDiv : undefined}
+      style={filteredCategory.name === name ? checkDiv : undefined}
       className="categories-div__holder"
     >
       <div className="categories-div__text">
@@ -31,7 +32,7 @@ export const CategoriesItem = (props: ItemProps) => {
           </form>
           <form>
             <button
-              onClick={() => props.deleteCategoryProp(props.categorieProps.id)}
+              onClick={() => props.deleteCategoryProp(props.categoryProps.id)}
             >
               Delete
             </button>
@@ -39,7 +40,7 @@ export const CategoriesItem = (props: ItemProps) => {
         </div>
         <input
           type="checkbox"
-          checked={isCompleted}
+          checked={filteredCategory.name === name}
           onChange={props.markCompleteProp}
         />
       </div>
