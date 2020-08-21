@@ -4,7 +4,7 @@ import { Categories, Context } from 'Context/Context';
 interface ItemProps {
   categoryProps: Categories;
   newDateProp: string;
-  deleteCategoryProp: (id: number) => void;
+  deleteCategoryProp: (id: number, name: string) => void;
   markCompleteProp: () => void;
   editProp: (e: any) => void;
 }
@@ -32,7 +32,12 @@ export const CategoriesItem = (props: ItemProps) => {
           </form>
           <form>
             <button
-              onClick={() => props.deleteCategoryProp(props.categoryProps.id)}
+              onClick={() =>
+                props.deleteCategoryProp(
+                  props.categoryProps.id,
+                  props.categoryProps.name
+                )
+              }
             >
               Delete
             </button>

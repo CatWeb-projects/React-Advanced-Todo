@@ -66,20 +66,18 @@ export const TodosCategories = () => {
   }, [filteredCategory, todos]);
 
   const deleteCategory = useCallback(
-    (id) => {
+    (id, name) => {
       setCategories((prevCategories: Categories[]) =>
         prevCategories.filter(
           (otherCategory: Categories) => otherCategory.id !== id
         )
       );
       setTodos((prevTask: Todos[]) =>
-        prevTask.filter(
-          (otherTask: Todos) => otherTask.name !== filteredCategory.name
-        )
+        prevTask.filter((otherTask: Todos) => otherTask.name !== name)
       );
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [filteredCategory]
+    [categories, todos]
   );
 
   const editCategory = useCallback(
